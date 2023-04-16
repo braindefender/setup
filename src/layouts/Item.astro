@@ -1,0 +1,81 @@
+---
+import { MarkdownLayoutProps } from "astro";
+import { Image } from "@astrojs/image/components";
+import Layout from "./Layout.astro";
+
+type Props = MarkdownLayoutProps<{
+  title: string;
+  price?: string;
+  image?: { src: string };
+}>;
+
+const { frontmatter } = Astro.props;
+---
+
+<Layout title={frontmatter.title}>
+  <div class="item">
+    <div class="image">
+      <Image
+        src={`/${frontmatter.image.src}`}
+        alt={frontmatter.title}
+        width={800}
+        height={480}
+      />
+    </div>
+
+    <div class="row">
+      <h1>{frontmatter.title}</h1>
+      {
+        frontmatter.price !== undefined && (
+          <div class="price">{frontmatter.price}</div>
+        )
+      }
+    </div>
+
+    <div class="content"><slot /></div>
+  </div>
+</Layout>
+
+<style>
+  .item {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .image {
+    display: flex;
+    align-items: center;
+    border-radius: 12px;
+    overflow: hidden;
+    max-height: 480px;
+  }
+
+  .row {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+  }
+
+  h1 {
+    font-size: 32px;
+    line-height: 36px;
+  }
+
+  .price {
+    display: inline-block;
+    background-color: black;
+    color: white;
+    padding: 4px 8px;
+    height: 36px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 18px;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    white-space: pre-wrap;
+  }
+</style>

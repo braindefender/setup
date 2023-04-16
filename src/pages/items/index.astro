@@ -1,0 +1,21 @@
+---
+import { Grid, GridItem } from "../../components/Grid";
+import Layout from "../../layouts/Layout.astro";
+
+title: "Item list";
+
+const getTime = (v) => new Date(v.frontmatter.date ?? 0).getTime();
+const sortByDate = (a, b) => getTime(b) - getTime(a);
+
+const items = await Astro.glob("./*.md");
+
+const gridItems = items.sort(sortByDate).map((i) => ({
+  ...i.frontmatter,
+  url: i.url,
+  tags: i.frontmatter?.tags.split(",").map((t) => t.trim()),
+})) as GridItem[];
+---
+
+<Layout>
+  <Grid items={gridItems} client:only />
+</Layout>
